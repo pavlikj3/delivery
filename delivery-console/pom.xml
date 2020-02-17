@@ -1,0 +1,62 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>delivery-console</artifactId>
+	<packaging>jar</packaging>
+	<parent>
+		<groupId>cz.pavlikj3.delivery</groupId>
+		<artifactId>delivery-parent</artifactId>
+		<version>0.0.1</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<dependencies>
+	</dependencies>
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/config</directory>
+				<filtering>true</filtering>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>		
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>appassembler-maven-plugin</artifactId>
+				<version>1.8</version>
+				<configuration>
+					<configurationDirectory>conf</configurationDirectory>
+					<copyConfigurationDirectory>true</copyConfigurationDirectory>
+					<filterConfigurationDirectory>true</filterConfigurationDirectory>
+					<binFileExtensions>
+						<unix>.sh</unix>
+					</binFileExtensions>
+					<programs>
+						<program>
+							<mainClass>org.springframework.shell.Bootstrap</mainClass>
+							<id>delivery</id>
+						</program>
+					</programs>
+					<platforms>
+						<platform>windows</platform>
+						<platform>unix</platform>
+					</platforms>
+				</configuration>
+				<executions>
+			        <execution>
+			            <id>assembly</id>
+			            <phase>package</phase>
+			            <goals>
+			                <goal>assemble</goal>
+			            </goals>
+			        </execution>
+			    </executions>				
+			</plugin>
+		</plugins>
+	</build>
+</project>
