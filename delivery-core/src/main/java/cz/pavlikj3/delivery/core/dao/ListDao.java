@@ -1,5 +1,6 @@
 package cz.pavlikj3.delivery.core.dao;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,6 +22,44 @@ public class ListDao<T extends BaseDto, F extends BaseSf> implements IDao<T,F>
 		maxId = 0;
 	}
 	
+	private boolean fillComparator(T dto,  F sf)
+	{
+		for (Method method : getSfClass().getMethods())
+		{
+			if (!method.getName().startsWith("get") || !method.getName().endsWith("Equals"))
+			{
+				continue;
+			}
+			String name = method.getName().substring(4, method.getName().length() - 6); 
+			try
+			{
+				Method dtoField = getDtoClass().getMethod("get" + name);
+				Method sfField = getSfClass().getMethod("get" + name + "Equals");
+				Object dtoFieldValue = dtoField.invoke(dto, new Object[0]);
+				Object sfFieldValue = sfField.invoke(sf, new Object[0]);
+				if (sfFieldValue == null)
+				{
+					return false;
+				}
+				if (dtoFieldValue == null)
+				{
+					return false;
+				}			
+				assert sfFieldValue.getClass().equals(dtoFieldValue.getClass());
+				boolean result = sfFieldValue.equals(dtoFieldValue);
+				if (!result)
+				{
+					return false;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new RuntimeException(String.format("Can't eval searchField for name: '%s'", name),ex);
+			}
+		}
+		return true;
+	}
+	
 	public T find(Long id) 
 	{
 		T result = ListUtil.getFirst(list.stream().filter(dto -> LongUtil.equals(id, dto.getId(), true)).collect(Collectors.<T>toList()));
@@ -30,17 +69,19 @@ public class ListDao<T extends BaseDto, F extends BaseSf> implements IDao<T,F>
 	
 	public T findBySf(F sf) 
 	{
-		return null;
+		T result = ListUtil.getFirst(findListBySf(sf));
+		return result;
 	}
 	
 	public Long countBySf(F sf) 
 	{
-		return null;
+		Long result = new Long(list.stream().filter(dto -> fillComparator(dto, sf)).collect(Collectors.<T>toList()).size());
+		return result;
 	}
 	
 	public List<T> findListBySf(F sf) {
-		// TODO Auto-generated method stub
-		return null;
+		List<T> result = list.stream().filter(dto -> fillComparator(dto, sf)).collect(Collectors.<T>toList());
+		return result;
 	}
 	
 	public void delete(Long id) 
