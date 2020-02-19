@@ -12,9 +12,6 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cz.patos.sokolovofw.core.base.dao.BaseDao;
-import cz.patos.sokolovofw.core.base.dao.ListSP;
-import cz.patos.sokolovofw.core.base.model.BaseModel;
 import cz.pavlikj3.delivery.core.dto.BaseDto;
 
 public abstract class TestCommonBaseDao<T extends BaseDto, F extends BaseSf> extends BaseTest
@@ -29,94 +26,72 @@ public abstract class TestCommonBaseDao<T extends BaseDto, F extends BaseSf> ext
 	protected void setupSf(F sf) {}
 		
 	@Test 
-	public void testCreate() 
+	public void testNewDto() 
 	{
-		if (!isTestCreate())
-		{
-			return;
-		}
-		BaseDao<T,F> dao = this.getDao(); 
+		IDao<T,F> dao = this.getDao(); 
 
-		BaseModel item = dao.create();
+		BaseDto item = dao.newDto();
 		Assert.assertNotNull(item);
-		Assert.assertEquals(0, item.getId());
-		Assert.assertEquals(dao.getModelClass(), item.getClass());
 	}
 	
 	@Test 
-	public void testGet() 
+	public void testFind() 
 	{
-		if (!isTestGet())
-		{
-			return;
-		}
-		BaseDao<T,F> dao = this.getDao(); 
-		T item = createModel();
+		IDao<T,F> dao = this.getDao(); 
+		T item = createDto();
 		dao.save(item);
 		
-		BaseModel item1 = dao.get(item.getId());		
+		T item1 = dao.find(item.getId());		
 		Assert.assertTrue(item1.getId() > 0);		
-		Assert.assertEquals(dao.getModelClass(), item.getClass());
 		Assert.assertEquals(item1.getId(), item.getId());
 		
 	}
 
 	@Test 
-	public void testGetSize() 
+	public void testCountBySf() 
 	{
-		BaseDao<T,F> dao = this.getDao();
-		F sf = dao.createSF();
-		setupSF(sf);
-		int size = dao.getSize(sf);
+		IDao<T,F> dao = this.getDao();
+		F sf = dao.newSf();
+		setupSf(sf);
+		Long size = dao.countBySf(sf);
 		Assert.assertTrue(size >= 0 );
 	}
 	
 	@Test  
-	public void testGetList() 
+	public void testFindListBySf() 
     {
-		BaseDao<T,F> dao = this.getDao();
-		F sf = dao.createSF();
-		setupSF(sf);
-		List<T> list = dao.getList(sf, new ListSP());
+		IDao<T,F> dao = this.getDao();
+		F sf = dao.newSf();
+		setupSf(sf);
+		List<T> list = dao.findListBySf(sf);
 		Assert.assertNotNull(list);
     }
 	
 	@Test  
 	public void testSave() 
 	{
-		if (!isTestSave())
-		{
-			return;
-		}
-		
-		BaseDao<T,F> dao = this.getDao(); 
+		IDao<T,F> dao = this.getDao(); 
 
-		T item = createModel();
+		T item = createDto();
 		dao.save(item);
 		Assert.assertTrue(item.getId() > 0);		
-		Assert.assertEquals(dao.getModelClass(), item.getClass());
 		Assert.assertEquals(item.getId(), item.getId());		
 	}
 
 	@Test  
 	public void testDelete() 
 	{
-		if (!isTestDelete())
-		{
-			return;
-		}
 		
-		BaseDao<T,F> dao = this.getDao(); 
+		IDao<T,F> dao = this.getDao(); 
 
-		T item = createModel();
+		T item = createDto();
 		dao.save(item);
 		Assert.assertTrue(item.getId() > 0);		
-		Assert.assertEquals(dao.getModelClass(), item.getClass());
 		Assert.assertEquals(item.getId(), item.getId());		
 		
-		dao.delete(item);		
+		dao.delete(item.getId());		
 	}
 
-	protected abstract IDao<T, F> getDao() ;
+	protected abstract ListDao<T, F> getDao() ;
 	
 }

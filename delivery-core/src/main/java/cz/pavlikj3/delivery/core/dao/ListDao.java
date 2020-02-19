@@ -30,7 +30,7 @@ public class ListDao<T extends BaseDto, F extends BaseSf> implements IDao<T,F>
 			{
 				continue;
 			}
-			String name = method.getName().substring(4, method.getName().length() - 6); 
+			String name = method.getName().substring(3, method.getName().length() - 6); 
 			try
 			{
 				Method dtoField = getDtoClass().getMethod("get" + name);
