@@ -94,4 +94,10 @@ public abstract class TestCommonBaseDao<T extends BaseDto, F extends BaseSf> ext
 
 	protected abstract ListDao<T, F> getDao() ;
 	
+	public T returnDto()
+	{
+		T dto = createDto();
+		dto = getDao().save(dto);
+		return dto;
+	}
 }
