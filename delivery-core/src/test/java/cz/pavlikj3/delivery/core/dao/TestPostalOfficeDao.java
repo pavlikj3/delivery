@@ -1,9 +1,11 @@
 package cz.pavlikj3.delivery.core.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import cz.pavlikj3.delivery.core.dto.PostalOffice;
 
+@Component
 public class TestPostalOfficeDao extends TestCommonBaseDao<PostalOffice, PostalOfficeSf>{
 
 	@Autowired
