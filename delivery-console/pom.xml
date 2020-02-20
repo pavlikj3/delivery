@@ -12,6 +12,26 @@
 	</parent>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.springframework.shell</groupId>
+			<artifactId>spring-shell</artifactId>
+			<version>1.1.0.RELEASE</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-context-support</artifactId>
+				</exclusion>
+			</exclusions>			
+		</dependency>	
+		<dependency>
+			<groupId>cz.pavlikj3.delivery</groupId>
+			<artifactId>delivery-core</artifactId>
+			<version>0.0.1</version>		
+		</dependency>
 	</dependencies>
 	<build>
 		<resources>
