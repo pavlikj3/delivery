@@ -1,5 +1,6 @@
 package cz.pavlikj3.delivery.core.dao;
 
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
@@ -18,4 +19,9 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 
 public class BaseTest {
 
+	@Test
+	public void testOne()
+	{
+		
+	}
 }

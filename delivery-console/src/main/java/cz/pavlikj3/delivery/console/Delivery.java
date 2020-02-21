@@ -10,13 +10,15 @@ package cz.pavlikj3.delivery.console;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.shell.core.CommandMarker;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.stereotype.Component;
 
 import cz.pavlikj3.delivery.core.business.PackageBll;
 
 @Component
-public class Delivery  {
+public class Delivery  implements CommandMarker 
+{
 	@Autowired
 	private PackageBll packageBll;
 

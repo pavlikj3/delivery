@@ -50,7 +50,7 @@
 				<artifactId>appassembler-maven-plugin</artifactId>
 				<version>1.8</version>
 				<configuration>
-					<configurationDirectory>conf</configurationDirectory>
+					<configurationDirectory>config</configurationDirectory>
 					<copyConfigurationDirectory>true</copyConfigurationDirectory>
 					<filterConfigurationDirectory>true</filterConfigurationDirectory>
 					<binFileExtensions>
@@ -77,6 +77,17 @@
 			        </execution>
 			    </executions>				
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>			
 		</plugins>
 	</build>
 </project>
