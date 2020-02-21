@@ -91,27 +91,34 @@ public class ListDao<T extends BaseDto, F extends BaseSf> implements IDao<T,F>
 	public void delete(Long id) 
 	{
 		assert id != null;
-		List<T> newList = list.stream().filter(dto -> !LongUtil.equals(id, dto.getId(), true)).collect(Collectors.<T>toList());
-		if (newList.size() == list.size())
-		{
-			throw new RuntimeException(String.format("Unknown dto of class: '%s' with id: %d", getDtoClass().getSimpleName(), id));
+		synchronized (list) 
+		{			
+			List<T> newList = list.stream().filter(dto -> !LongUtil.equals(id, dto.getId(), true)).collect(Collectors.<T>toList());
+			if (newList.size() == list.size())
+			{
+				throw new RuntimeException(String.format("Unknown dto of class: '%s' with id: %d", getDtoClass().getSimpleName(), id));
+			}
+			list = newList;
 		}
-		list = newList;
+
 	}
 	
 	public T save(T dto) 
 	{
 		assert dto != null;
-		if (LongUtil.isEmpty(dto.getId()))
-		{
-			dto.setId(++maxId);
-			list.add(dto);
-		}
-		else
-		{
-			if (list.remove(dto))
+		synchronized (list) 
+		{			
+			if (LongUtil.isEmpty(dto.getId()))
 			{
+				dto.setId(++maxId);
 				list.add(dto);
+			}
+			else
+			{
+				if (list.remove(dto))
+				{
+					list.add(dto);
+				}
 			}
 		}
 		return dto;
