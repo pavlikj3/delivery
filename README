@@ -11,4 +11,4 @@ mvn clean package
 After success build command line program is stored in directory delivery-console/target/appassembler.
 
 RUN
-In delivery-console/target/appassembler/bin run delivery.sh for linux or delivery.bat for windows. 
+In delivery-console/target/appassembler/bin run "delivery.sh run" for linux or "delivery.bat run" for windows. 

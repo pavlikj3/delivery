@@ -14,17 +14,24 @@ import org.springframework.shell.core.CommandMarker;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.stereotype.Component;
 
-import cz.pavlikj3.delivery.core.business.PackageBll;
+import cz.pavlikj3.delivery.core.dao.PostalOfficeDao;
+import cz.pavlikj3.delivery.core.dto.PostalOffice;
+import cz.pavlikj3.delivery.core.utils.SpringUtil;
 
 @Component
 public class Delivery  implements CommandMarker 
 {
 	@Autowired
-	private PackageBll packageBll;
-
+	private PostalOfficeDao postalOfficeDao;
+	
 	@CliCommand(value = "run", help = "Run it")
-	public void scheduler() throws IOException
+	public void run() throws IOException, InterruptedException
 	{
-		packageBll.listPostOffices(System.out);
+		SpringUtil.getApplicationContext().getBean(PostOfficeThread.class).start();
+		Thread.sleep(5000);
+		
+		PostalOffice postalOffice = postalOfficeDao.newDto();
+		postalOffice.setPostalCode("28601");
+		postalOfficeDao.save(postalOffice);
 	}
 }

@@ -24,6 +24,10 @@ public class ListDao<T extends BaseDto, F extends BaseSf> implements IDao<T,F>
 	
 	private boolean fillComparator(T dto,  F sf)
 	{
+		if (sf == null)
+		{
+			return true;
+		}
 		for (Method method : getSfClass().getMethods())
 		{
 			if (!method.getName().startsWith("get") || !method.getName().endsWith("Equals"))
