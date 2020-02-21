@@ -1,2 +1,14 @@
 AUTHORS
 Jan Pavlik (pavlikj3@seznam.cz)
+
+DESCRIPTION
+Small "database" program for manipulation package informations.
+
+BUILD
+Use maven.
+
+mvn clean package
+After success build command line program is stored in directory delivery-console/target/appassembler.
+
+RUN
+In delivery-console/target/appassembler/bin run delivery.sh for linux or delivery.bat for windows. 
