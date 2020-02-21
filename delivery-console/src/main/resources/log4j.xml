@@ -6,7 +6,7 @@
         <layout class="org.apache.log4j.PatternLayout"> <param name="ConversionPattern" value="%d %p (%X{user}) [%c{1}] %m%n"/> </layout>
   </appender>
 <appender name="appender" class="org.apache.log4j.RollingFileAppender">
-   <param name="File" value="../delivery-console.log"/>
+   <param name="File" value="${log4j.path}"/>
    <param name="Append" value="true" />
    <param name="MaxFileSize" value="10MB" />
    <param name="MaxBackupIndex" value="10" />
