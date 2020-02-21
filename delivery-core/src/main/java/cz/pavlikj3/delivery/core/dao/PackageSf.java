@@ -10,7 +10,8 @@ public class PackageSf extends BaseSf
 		return postalOfficeEquals;
 	}
 
-	public void setPostalOfficeEquals(PostalOffice postalOfficeEquals) {
+	public PackageSf setPostalOfficeEquals(PostalOffice postalOfficeEquals) {
 		this.postalOfficeEquals = postalOfficeEquals;
+		return this;
 	}
 }

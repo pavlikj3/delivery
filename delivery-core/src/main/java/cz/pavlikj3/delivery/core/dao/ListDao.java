@@ -43,7 +43,7 @@ public class ListDao<T extends BaseDto, F extends BaseSf> implements IDao<T,F>
 				Object sfFieldValue = sfField.invoke(sf, new Object[0]);
 				if (sfFieldValue == null)
 				{
-					return false;
+					continue;
 				}
 				if (dtoFieldValue == null)
 				{
