@@ -2,14 +2,15 @@ package cz.pavlikj3.delivery.core.dao;
 
 public class PostalOfficeSf extends BaseSf
 {
-	private String postalCodeEquals;
+	private Integer postalCodeEquals;
 
-	public String getPostalCodeEquals() {
+	public Integer getPostalCodeEquals() {
 		return postalCodeEquals;
 	}
 
-	public void setPostalCodeEquals(String postalCodeEquals) {
+	public PostalOfficeSf setPostalCodeEquals(Integer postalCodeEquals) {
 		this.postalCodeEquals = postalCodeEquals;
+		return this;
 	}
 	
 }

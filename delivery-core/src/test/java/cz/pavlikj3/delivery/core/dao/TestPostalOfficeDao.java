@@ -15,7 +15,7 @@ public class TestPostalOfficeDao extends TestCommonBaseDao<PostalOffice, PostalO
 	protected PostalOffice createDto() 
 	{
 		PostalOffice result = postalOfficeDao.newDto();
-		result.setPostalCode("28601");
+		result.setPostalCode(28601);
 		return result;
 	}
 

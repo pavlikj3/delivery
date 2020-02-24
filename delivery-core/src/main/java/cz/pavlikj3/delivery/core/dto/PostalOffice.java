@@ -2,13 +2,13 @@ package cz.pavlikj3.delivery.core.dto;
 
 public class PostalOffice extends BaseDto
 {
-	private String postalCode;
+	private Integer postalCode;
 
-	public String getPostalCode() {
+	public Integer getPostalCode() {
 		return postalCode;
 	}
 
-	public void setPostalCode(String postalCode) {
+	public void setPostalCode(Integer postalCode) {
 		this.postalCode = postalCode;
 	}	
 }
