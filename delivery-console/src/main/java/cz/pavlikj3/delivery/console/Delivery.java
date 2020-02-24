@@ -7,36 +7,57 @@
  */
 package cz.pavlikj3.delivery.console;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.core.CommandMarker;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.stereotype.Component;
 
-import cz.pavlikj3.delivery.core.dao.PackageDao;
-import cz.pavlikj3.delivery.core.dao.PostalOfficeDao;
-import cz.pavlikj3.delivery.core.dto.Package;
-import cz.pavlikj3.delivery.core.dto.PostalOffice;
+import cz.pavlikj3.delivery.core.business.PackageBll;
+import cz.pavlikj3.delivery.core.exception.ValidationException;
 import cz.pavlikj3.delivery.core.utils.SpringUtil;
+import jline.internal.Log;
 
 @Component
 public class Delivery  implements CommandMarker 
 {
+	private static final Logger log = Logger.getLogger(Delivery.class);
 	@Autowired
-	private PostalOfficeDao postalOfficeDao;
-
-	@Autowired
-	private PackageDao packageDao;
+	private PackageBll packageBll;
 
 	@CliCommand(value = "run", help = "Run it")
 	public void run() throws IOException, InterruptedException
 	{
 		SpringUtil.getApplicationContext().getBean(PostOfficeThread.class).start();
+		
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        System.out.print(">>>>");
+        String line = reader.readLine();
+        
+		while (!("quit".equalsIgnoreCase(line) || "exit".equalsIgnoreCase(line)))
+		{			
+			try
+			{
+				packageBll.parseLine(line);
+			}
+			catch (ValidationException ex)
+			{
+				System.out.println(ex.getMessage());
+				log.info(ex);
+			}
+			System.out.print(">>>>");
+			line = reader.readLine();
+		}
+		System.out.print("Exiting");
+		/*
 		Thread.sleep(5000);
 		
 		PostalOffice postalOffice = postalOfficeDao.newDto();
-		postalOffice.setPostalCode("28601");
+		postalOffice.setPostalCode(28601);
 		postalOfficeDao.save(postalOffice);
 		
 		Thread.sleep(5000);
@@ -50,6 +71,6 @@ public class Delivery  implements CommandMarker
 		pack1.setPostalOffice(postalOffice);
 		pack1.setWeight(10.5);
 		packageDao.save(pack1);
-
+		*/
 	}
 }

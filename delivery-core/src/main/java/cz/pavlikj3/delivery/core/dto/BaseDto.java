@@ -4,6 +4,11 @@ import java.io.Serializable;
 
 import cz.pavlikj3.delivery.core.utils.LongUtil;
 
+/**
+ * Base class for objects, that holds one type of data. Typically it is a table in db. 
+ * @author pavlikj3
+ *
+ */
 public class BaseDto implements Serializable
 {
 	private Long id;

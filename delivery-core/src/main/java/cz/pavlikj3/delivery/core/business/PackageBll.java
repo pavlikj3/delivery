@@ -75,7 +75,7 @@ public class PackageBll
 		if (postalOffice == null)
 		{
 			postalOffice = postalOfficeDao.newDto();
-			postalOffice.setPostalCode(28601);
+			postalOffice.setPostalCode(po);
 			postalOffice = postalOfficeDao.save(postalOffice);			
 		}
 		

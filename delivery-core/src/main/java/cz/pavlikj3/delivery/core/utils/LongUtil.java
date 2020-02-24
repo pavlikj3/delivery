@@ -2,6 +2,13 @@ package cz.pavlikj3.delivery.core.utils;
 
 public class LongUtil 
 {
+	/**
+	 * Test Long object equality. 
+	 * @param left
+	 * @param right
+	 * @param acceptNulls
+	 * @return
+	 */
 	public static boolean equals(Long left, Long right, boolean acceptNulls)
 	{
 		if (left == null && right == null)
