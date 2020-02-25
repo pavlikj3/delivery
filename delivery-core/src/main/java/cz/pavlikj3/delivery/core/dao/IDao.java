@@ -4,6 +4,13 @@ import java.util.List;
 
 import cz.pavlikj3.delivery.core.dto.BaseDto;
 
+/**
+ * Base class for classes, that can save and get dto obejcts.
+ * @author pavlikj3
+ *
+ * @param <T>
+ * @param <F>
+ */
 public interface IDao<T extends BaseDto, F extends BaseSf> 
 {
 	T find(Long id);

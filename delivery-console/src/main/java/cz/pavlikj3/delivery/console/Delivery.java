@@ -19,8 +19,6 @@ import org.springframework.stereotype.Component;
 
 import cz.pavlikj3.delivery.core.business.PackageBll;
 import cz.pavlikj3.delivery.core.exception.ValidationException;
-import cz.pavlikj3.delivery.core.utils.SpringUtil;
-import jline.internal.Log;
 
 @Component
 public class Delivery  implements CommandMarker 
@@ -29,13 +27,16 @@ public class Delivery  implements CommandMarker
 	@Autowired
 	private PackageBll packageBll;
 
+	@Autowired
+	private PostOfficeThread postOfficeThread;
+	
 	@CliCommand(value = "run", help = "Run it")
 	public void run() throws IOException, InterruptedException
 	{
-		SpringUtil.getApplicationContext().getBean(PostOfficeThread.class).start();
+		log.info("Starting");
+		postOfficeThread.start();
 		
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        System.out.print(">>>>");
         String line = reader.readLine();
         
 		while (!("quit".equalsIgnoreCase(line) || "exit".equalsIgnoreCase(line)))
@@ -49,28 +50,9 @@ public class Delivery  implements CommandMarker
 				System.out.println(ex.getMessage());
 				log.info(ex);
 			}
-			System.out.print(">>>>");
 			line = reader.readLine();
 		}
+		postOfficeThread.setStop();
 		System.out.print("Exiting");
-		/*
-		Thread.sleep(5000);
-		
-		PostalOffice postalOffice = postalOfficeDao.newDto();
-		postalOffice.setPostalCode(28601);
-		postalOfficeDao.save(postalOffice);
-		
-		Thread.sleep(5000);
-		Package pack = packageDao.newDto();
-		pack.setPostalOffice(postalOffice);
-		pack.setWeight(1.2);
-		packageDao.save(pack);
-		
-		Thread.sleep(10000);
-		Package pack1 = packageDao.newDto();
-		pack1.setPostalOffice(postalOffice);
-		pack1.setWeight(10.5);
-		packageDao.save(pack1);
-		*/
 	}
 }

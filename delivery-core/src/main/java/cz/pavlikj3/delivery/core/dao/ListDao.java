@@ -5,12 +5,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.log4j.Logger;
+
 import cz.pavlikj3.delivery.core.dto.BaseDto;
 import cz.pavlikj3.delivery.core.utils.ListUtil;
 import cz.pavlikj3.delivery.core.utils.LongUtil;
 
 public class ListDao<T extends BaseDto, F extends BaseSf> implements IDao<T,F>
 {
+	private static final Logger log = Logger.getLogger(ListDao.class);
+	
 	private Class<T> dtoClass;
 	private Class<F> sfClass;
 	private List<T> list;
@@ -22,6 +26,8 @@ public class ListDao<T extends BaseDto, F extends BaseSf> implements IDao<T,F>
 		maxId = 0;
 	}
 	
+	// Otestuje, zda dto objekt odpovida kriterium sf
+	// Neumi vnoreni
 	private boolean fillComparator(T dto,  F sf)
 	{
 		if (sf == null)
@@ -66,6 +72,10 @@ public class ListDao<T extends BaseDto, F extends BaseSf> implements IDao<T,F>
 	
 	public T find(Long id) 
 	{
+		if (log.isDebugEnabled())
+		{
+			log.debug(String.format("Finding object with id: %d of type: '%s'", id, getDtoClass().getSimpleName()));
+		}
 		T result = ListUtil.getFirst(list.stream().filter(dto -> LongUtil.equals(id, dto.getId(), true)).collect(Collectors.<T>toList()));
 		return result;
 	}
@@ -73,17 +83,30 @@ public class ListDao<T extends BaseDto, F extends BaseSf> implements IDao<T,F>
 	
 	public T findBySf(F sf) 
 	{
+		if (log.isDebugEnabled())
+		{
+			log.debug(String.format("Finding object with sf of type: '%s'", getDtoClass().getSimpleName()));
+		}
 		T result = ListUtil.getFirst(findListBySf(sf));
 		return result;
 	}
 	
 	public Long countBySf(F sf) 
 	{
+		if (log.isDebugEnabled())
+		{
+			log.debug(String.format("Count objects with of type: '%s'", getDtoClass().getSimpleName()));
+		}
 		Long result = new Long(list.stream().filter(dto -> fillComparator(dto, sf)).collect(Collectors.<T>toList()).size());
 		return result;
 	}
 	
 	public List<T> findListBySf(F sf) {
+		if (log.isDebugEnabled())
+		{
+			log.debug(String.format("Find objects with of type: '%s'", getDtoClass().getSimpleName()));
+		}
+
 		List<T> result = list.stream().filter(dto -> fillComparator(dto, sf)).collect(Collectors.<T>toList());
 		return result;
 	}
@@ -91,6 +114,10 @@ public class ListDao<T extends BaseDto, F extends BaseSf> implements IDao<T,F>
 	public void delete(Long id) 
 	{
 		assert id != null;
+		if (log.isDebugEnabled())
+		{
+			log.debug(String.format("Deleting object with id: %d of type: '%s'", id, getDtoClass().getSimpleName()));
+		}
 		synchronized (list) 
 		{			
 			List<T> newList = list.stream().filter(dto -> !LongUtil.equals(id, dto.getId(), true)).collect(Collectors.<T>toList());
@@ -106,6 +133,10 @@ public class ListDao<T extends BaseDto, F extends BaseSf> implements IDao<T,F>
 	public T save(T dto) 
 	{
 		assert dto != null;
+		if (log.isDebugEnabled())
+		{
+			log.debug(String.format("Saving object with id: %d of type: '%s'", dto.getId(), getDtoClass().getSimpleName()));
+		}		
 		synchronized (list) 
 		{			
 			if (LongUtil.isEmpty(dto.getId()))

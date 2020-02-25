@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import cz.pavlikj3.delivery.core.dao.PackageDao;
 import cz.pavlikj3.delivery.core.dao.PostalOfficeDao;
@@ -20,12 +20,22 @@ import cz.pavlikj3.delivery.core.utils.StringUtil;
 @Component
 public class PackageBll 
 {	
+	private static final Logger log = Logger.getLogger(PackageBll.class);
+	
 	@Autowired
 	private PostalOfficeDao postalOfficeDao;
 
 	@Autowired
 	private PackageDao packageDao;
 
+	// for performance - 
+	private static Pattern p = Pattern.compile("^([0-9]+\\.?[0-9]*)[ ]+([0-9]{5})$");
+	
+	/**
+	 * Write to stream postal office with sum weight of packages
+	 * @param os
+	 * @throws IOException
+	 */
 	public void listPostOffices(OutputStream os) throws IOException
 	{
 		List<PostalOffice> postalOffices =  postalOfficeDao.findListBySf(null);
@@ -38,6 +48,7 @@ public class PackageBll
 	
 	public void parseLine(String line)
 	{
+		log.info(String.format("Trying to parse user input line: '%s'", line));
 		/*
 	Sample input: 
 
@@ -61,7 +72,6 @@ public class PackageBll
 		{
 			return;
 		}
-		Pattern p = Pattern.compile("^([0-9]+\\.?[0-9]*)[ ]+([0-9]{5})$");
 		Matcher m = p.matcher(line);
 		if (!m.matches())
 		{

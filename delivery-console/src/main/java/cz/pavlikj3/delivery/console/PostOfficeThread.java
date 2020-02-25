@@ -25,7 +25,9 @@ public class PostOfficeThread extends Thread
 		{
 			try
 			{
-				System.out.println("Post offices");
+				System.out.println("");
+				System.out.println("________________");
+				System.out.println("PC   |Weight sum");
 				packageBll.listPostOffices(System.out);
 			}
 			catch (IOException ex)
