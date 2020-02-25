@@ -8,6 +8,7 @@
 package cz.pavlikj3.delivery.console;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -15,7 +16,9 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.core.CommandMarker;
 import org.springframework.shell.core.annotation.CliCommand;
+import org.springframework.shell.core.annotation.CliOption;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import cz.pavlikj3.delivery.core.business.PackageBll;
 import cz.pavlikj3.delivery.core.exception.ValidationException;
@@ -31,28 +34,42 @@ public class Delivery  implements CommandMarker
 	private PostOfficeThread postOfficeThread;
 	
 	@CliCommand(value = "run", help = "Run it")
-	public void run() throws IOException, InterruptedException
+	public void run( @CliOption(key= {"import"}) String fileName) throws IOException, InterruptedException
 	{
-		log.info("Starting");
-		postOfficeThread.start();
-		
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        String line = reader.readLine();
-        
-		while (!("quit".equalsIgnoreCase(line) || "exit".equalsIgnoreCase(line)))
-		{			
-			try
+		try
+		{
+			log.info("Starting");
+			
+			if (!StringUtils.isEmpty(fileName))
 			{
-				packageBll.parseLine(line);
+				packageBll.parseAllLines(new FileInputStream(fileName));
 			}
-			catch (ValidationException ex)
-			{
-				System.out.println(ex.getMessage());
-				log.info(ex);
+			postOfficeThread.start();
+			
+	        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+	        String line = reader.readLine();
+	        
+			while (!("quit".equalsIgnoreCase(line) || "exit".equalsIgnoreCase(line)))
+			{			
+				try
+				{
+					packageBll.parseLine(line);
+				}
+				catch (ValidationException ex)
+				{
+					System.out.println(ex.getMessage());
+					log.info(ex);
+				}
+				line = reader.readLine();
 			}
-			line = reader.readLine();
+			postOfficeThread.setStop();
+			System.out.print("Exiting");
 		}
-		postOfficeThread.setStop();
-		System.out.print("Exiting");
+		catch (Exception ex)
+		{
+			System.err.println(String.format("Exiting with error: '%s'",ex.getMessage()));
+			log.error(ex);
+			System.exit(1);
+		}
 	}
 }

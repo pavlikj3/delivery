@@ -12,3 +12,4 @@ After success build command line program is stored in directory delivery-console
 
 RUN
 In delivery-console/target/appassembler/bin run "delivery.sh run" for linux or "delivery.bat run" for windows. 
+If you wish import packages from file, you must append to command line parametr: --import filePath.

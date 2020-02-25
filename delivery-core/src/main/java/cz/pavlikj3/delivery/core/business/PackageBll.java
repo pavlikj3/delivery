@@ -1,6 +1,9 @@
 package cz.pavlikj3.delivery.core.business;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -43,6 +46,53 @@ public class PackageBll
 		{
 			double sum = packageDao.findListBySf(packageDao.newSf().setPostalOfficeEquals(postalOffice)).stream().map(dto -> dto.getWeight()).mapToDouble(Double::doubleValue).sum();
 			os.write(String.format("%05d %.3f\n", postalOffice.getPostalCode(), sum).getBytes());
+		}
+	}
+	
+	public void parseAllLines(InputStream is)
+	{
+		InputStreamReader ir = null;
+		BufferedReader reader = null;
+		try
+		{
+			ir = new InputStreamReader(is);
+			reader = new BufferedReader(ir);
+			String line = null;
+			while ((line = reader.readLine()) != null)
+			{
+				parseLine(line);
+			}
+			is.close();
+		}
+		catch (IOException ex)
+		{
+			throw new RuntimeException(ex);
+		}
+		finally 
+		{
+			if (ir != null)
+			{
+				try
+				{
+					ir.close();
+				}
+				catch (IOException ex)
+				{
+					
+				}
+			}
+			if (reader != null)
+			{
+				try
+				{
+					reader.close();
+				}
+				catch (IOException ex)
+				{
+					
+				}
+			}
+
 		}
 	}
 	
