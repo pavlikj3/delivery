@@ -42,6 +42,7 @@ public class Delivery  implements CommandMarker
 			
 			if (!StringUtils.isEmpty(fileName))
 			{
+				log.info(String.format("Importing data from file: '%s'", fileName));
 				packageBll.parseAllLines(new FileInputStream(fileName));
 			}
 			postOfficeThread.start();
